@@ -1,8 +1,10 @@
 import { Typography, Container, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CategoryBar = () => {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,11 +55,20 @@ const CategoryBar = () => {
         }}
       >
         {categories.map((category) => (
-          <div key={category.name}>
+          <div key={category.slug}>
             <Button
               variant="contained"
-              color="primary"
-              style={{ marginBottom: "10px" }}
+              style={{
+                marginBottom: "10px",
+                color: "fff",
+                backgroundColor: "#1769aa",
+              }}
+              onClick={() => {
+                const currentPath = window.location.pathname;
+                const backslash = `${currentPath}?category/${category.slug}`;
+                console.log(backslash);
+                navigate(backslash);
+              }}
             >
               {category.name}
             </Button>

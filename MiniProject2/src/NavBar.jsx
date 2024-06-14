@@ -10,16 +10,16 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 export default function NavBar() {
   return (
-    <AppBar position="fixed">
+    <AppBar position="fixed" backgroundColor="#4dabf5">
       <Toolbar>
         <Typography variant="h5">AllMart</Typography>
         <div style={{ flexGrow: 1 }}></div>
         <Tooltip title="View Cart">
-          <IconButton color="inherit">
+          <IconButton color="#4dabf5">
             <ShoppingCartIcon />
           </IconButton>
         </Tooltip>
-        <IconButton color="inherit">
+        <IconButton color="#4dabf5">
           <AccountCircleIcon />
         </IconButton>
       </Toolbar>
