@@ -35,7 +35,7 @@ const CreateAccountForm = () => {
         border: "1px solid #ccc",
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
         padding: "20px",
-        color: "black", // Add this line to make the text black
+        color: "black",
       }}
     >
       <Typography variant="h5" gutterBottom>

@@ -9,8 +9,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useEffect, useState, useRef, useContext } from "react";
-import { FaPlus, FaArrowLeft, FaArrowRight, FaMinus } from "react-icons/fa"; // Import arrow icons
-import { useLocation } from "react-router-dom"; // Import useLocation hook
+import { FaPlus, FaArrowLeft, FaArrowRight, FaMinus } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 import { UserContext } from "../UserContext";
 
 export default function BestSeller() {
@@ -18,9 +18,9 @@ export default function BestSeller() {
   const [hoveredProductId, setHoveredProductId] = useState(null);
   const containerRef = useRef(null);
   const cardRef = useRef(null);
-  const location = useLocation(); // Use useLocation hook instead of useSearchParams
+  const location = useLocation();
   const [categoryText, setCategoryText] = useState("Best Sellers!");
-  const [sortOption, setSortOption] = useState("ratingHighest"); // Add state for sort option
+  const [sortOption, setSortOption] = useState("ratingHighest");
   const { cart, addToCart, removeFromCart } = useContext(UserContext);
 
   useEffect(() => {
@@ -140,7 +140,6 @@ export default function BestSeller() {
               }}
             >
               <FaArrowLeft style={{ color: "white" }} />{" "}
-              {/* Set arrow icon color to white */}
             </Button>
           </div>
           {sortedProducts.map((product) => (
@@ -186,7 +185,7 @@ export default function BestSeller() {
                     onMouseLeave={() => setHoveredProductId(null)}
                     style={{
                       marginBottom: "0",
-                      backgroundColor: "red", // Set button background color to red
+                      backgroundColor: "red",
                     }}
                   >
                     {hoveredProductId === product.id ? (
@@ -202,7 +201,7 @@ export default function BestSeller() {
                     onClick={() => addToCart(product)}
                     onMouseEnter={() => setHoveredProductId(product.id)}
                     onMouseLeave={() => setHoveredProductId(null)}
-                    style={{ marginBottom: "0" }} // Remove the space between the icon and the bottom border
+                    style={{ marginBottom: "0" }}
                   >
                     {hoveredProductId === product.id ? (
                       "Add to Cart"
@@ -220,11 +219,10 @@ export default function BestSeller() {
               className="arrow-button"
               style={{
                 height: cardRef.current?.clientHeight || "auto",
-                backgroundColor: "#1769aa", // Set blue background color
+                backgroundColor: "#1769aa",
               }}
             >
               <FaArrowRight style={{ color: "white" }} />{" "}
-              {/* Set arrow icon color to white */}
             </Button>
           </div>
         </div>

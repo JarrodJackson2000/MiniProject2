@@ -10,7 +10,7 @@ const Cart = () => {
   const rootStyle = {
     flexGrow: 1,
     padding: "16px",
-    paddingTop: "64px", // Add padding to the top to avoid overlapping with the nav bar
+    paddingTop: "64px",
   };
 
   const cardStyle = {
@@ -54,7 +54,7 @@ const Cart = () => {
               variant="contained"
               color="secondary"
               startIcon={<DeleteIcon />}
-              style={{ backgroundColor: "red" }} // Change the background color to red
+              style={{ backgroundColor: "red" }}
             >
               Delete
             </Button>

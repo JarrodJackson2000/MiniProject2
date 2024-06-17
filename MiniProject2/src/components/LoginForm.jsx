@@ -40,7 +40,7 @@ const LoginForm = () => {
         border: "1px solid #ccc",
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
         padding: "20px",
-        color: "black", // Set text color to black
+        color: "black",
       }}
     >
       {userEmail ? (
