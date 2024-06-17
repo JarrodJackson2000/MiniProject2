@@ -4,10 +4,14 @@ import {
   CardContent,
   CardMedia,
   Button,
+  FormControl,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
-import { FaPlus, FaArrowLeft, FaArrowRight } from "react-icons/fa"; // Import arrow icons
+import { useEffect, useState, useRef, useContext } from "react";
+import { FaPlus, FaArrowLeft, FaArrowRight, FaMinus } from "react-icons/fa"; // Import arrow icons
 import { useLocation } from "react-router-dom"; // Import useLocation hook
+import { UserContext } from "../UserContext";
 
 export default function BestSeller() {
   const [products, setProducts] = useState([]);
@@ -16,6 +20,8 @@ export default function BestSeller() {
   const cardRef = useRef(null);
   const location = useLocation(); // Use useLocation hook instead of useSearchParams
   const [categoryText, setCategoryText] = useState("Best Sellers!");
+  const [sortOption, setSortOption] = useState("ratingHighest"); // Add state for sort option
+  const { cart, addToCart, removeFromCart } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +30,7 @@ export default function BestSeller() {
         let filteredProducts = [];
         if (location.search) {
           // Update searchParams to location.search
-          url += `/${location.search}`;
+          url = url + `?limit=50000`;
           const response = await fetch(url);
           const data = await response.json();
           filteredProducts = data.products.filter(
@@ -37,10 +43,11 @@ export default function BestSeller() {
             newCategoryText.charAt(0).toUpperCase() + newCategoryText.slice(1)
           );
         } else {
+          url = url + `?limit=50000`;
           const response = await fetch(url);
           const data = await response.json();
           filteredProducts = data.products.filter(
-            (product) => product.rating > 4.0
+            (product) => product.rating > 4.85
           );
           setProducts(filteredProducts);
           setCategoryText("Best Sellers!");
@@ -76,6 +83,20 @@ export default function BestSeller() {
     }
   }, [products]);
 
+  const handleSortOptionChange = (event) => {
+    setSortOption(event.target.value);
+  };
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sortOption === "priceLowest") {
+      return a.price - b.price;
+    } else if (sortOption === "priceHighest") {
+      return b.price - a.price;
+    } else if (sortOption === "ratingHighest") {
+      return b.rating - a.rating;
+    }
+  });
+
   return (
     <>
       <div
@@ -86,10 +107,21 @@ export default function BestSeller() {
           marginBottom: "50px",
         }}
       >
-        {" "}
         <Typography variant="h5" style={{ color: "black" }}>
           {categoryText}
         </Typography>
+        <div>
+          <FormControl style={{ marginBottom: "20px" }}>
+            <Typography variant="h6" style={{ color: "black" }}>
+              Sort By:
+            </Typography>
+            <Select value={sortOption} onChange={handleSortOptionChange}>
+              <MenuItem value="priceLowest">Price Lowest</MenuItem>
+              <MenuItem value="priceHighest">Price Highest</MenuItem>
+              <MenuItem value="ratingHighest">Rating Highest</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
         <div
           style={{
             display: "flex",
@@ -104,31 +136,32 @@ export default function BestSeller() {
               className="arrow-button"
               style={{
                 height: cardRef.current?.clientHeight || "auto",
-                backgroundColor: "#1769aa", // Set blue background color
+                backgroundColor: "#1769aa",
               }}
             >
-              <FaArrowLeft />
+              <FaArrowLeft style={{ color: "white" }} />{" "}
+              {/* Set arrow icon color to white */}
             </Button>
           </div>
-          {products.map((product) => (
+          {sortedProducts.map((product) => (
             <Card
               key={product.id}
               className="card"
               style={{
                 marginRight: "20px",
-                flex: "0 0 300px", // Increase the card size to 300px
+                flex: "0 0 300px",
                 padding: "10px",
-                border: "1px solid #ccc", // Add a solid border with a color of #ccc
-                borderRadius: "8px", // Add border radius to create rounded corners
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Add a subtle box shadow
-                position: "relative", // Add position relative to the card
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                position: "relative",
               }}
               ref={cardRef}
             >
               <CardMedia
                 component="img"
-                height="200" // Increase the height of the image to 200px
-                width="300" // Increase the width of the image to 300px
+                height="200"
+                width="300"
                 image={product.images[0]}
                 alt={product.title}
               />
@@ -146,13 +179,38 @@ export default function BestSeller() {
                   Description: {product.description}{" "}
                   {/* Add product description */}
                 </Typography>
-                <Button
-                  onMouseEnter={() => setHoveredProductId(product.id)}
-                  onMouseLeave={() => setHoveredProductId(null)}
-                  style={{ marginBottom: "0" }} // Remove the space between the icon and the bottom border
-                >
-                  {hoveredProductId === product.id ? "Add to Cart" : <FaPlus />}
-                </Button>
+                {cart.includes(product) ? (
+                  <Button
+                    onClick={() => removeFromCart(product)}
+                    onMouseEnter={() => setHoveredProductId(product.id)}
+                    onMouseLeave={() => setHoveredProductId(null)}
+                    style={{
+                      marginBottom: "0",
+                      backgroundColor: "red", // Set button background color to red
+                    }}
+                  >
+                    {hoveredProductId === product.id ? (
+                      <Typography variant="body2" style={{ color: "white" }}>
+                        Remove from Cart
+                      </Typography>
+                    ) : (
+                      <FaMinus style={{ color: "white" }} />
+                    )}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => addToCart(product)}
+                    onMouseEnter={() => setHoveredProductId(product.id)}
+                    onMouseLeave={() => setHoveredProductId(null)}
+                    style={{ marginBottom: "0" }} // Remove the space between the icon and the bottom border
+                  >
+                    {hoveredProductId === product.id ? (
+                      "Add to Cart"
+                    ) : (
+                      <FaPlus />
+                    )}
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}
@@ -165,7 +223,8 @@ export default function BestSeller() {
                 backgroundColor: "#1769aa", // Set blue background color
               }}
             >
-              <FaArrowRight />
+              <FaArrowRight style={{ color: "white" }} />{" "}
+              {/* Set arrow icon color to white */}
             </Button>
           </div>
         </div>

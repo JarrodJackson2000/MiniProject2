@@ -1,9 +1,18 @@
-import { Typography, Container, Button } from "@mui/material";
+import {
+  Typography,
+  Container,
+  Button,
+  Menu,
+  MenuItem,
+  IconButton,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const CategoryBar = () => {
   const [categories, setCategories] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +32,14 @@ const CategoryBar = () => {
     fetchData();
   }, []);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Container
       maxWidth="sm"
@@ -32,7 +49,6 @@ const CategoryBar = () => {
         left: 0,
         top: 55,
         bottom: 0,
-        backgroundColor: "#eee",
         padding: "20px",
         overflow: "auto",
         display: "flex",
@@ -54,26 +70,36 @@ const CategoryBar = () => {
           textAlign: "left",
         }}
       >
-        {categories.map((category) => (
-          <div key={category.slug}>
-            <Button
-              variant="contained"
-              style={{
-                marginBottom: "10px",
-                color: "fff",
-                backgroundColor: "#1769aa",
-              }}
+        <IconButton
+          aria-controls="category-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          style={{ marginBottom: "10px" }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Menu
+          id="category-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          {categories.map((category) => (
+            <MenuItem
+              key={category.slug}
               onClick={() => {
                 const currentPath = window.location.pathname;
                 const backslash = `${currentPath}?category/${category.slug}`;
                 console.log(backslash);
                 navigate(backslash);
+                handleClose();
               }}
             >
               {category.name}
-            </Button>
-          </div>
-        ))}
+            </MenuItem>
+          ))}
+        </Menu>
       </div>
     </Container>
   );
