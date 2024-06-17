@@ -25,7 +25,7 @@ const CreateAccountForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Add your create account logic here
+    // Add create account logic here
   };
 
   return (
